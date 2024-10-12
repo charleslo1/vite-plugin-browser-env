@@ -1,0 +1,46 @@
+{
+  "name": "vite-plugin-browser-env",
+  "version": "1.1.2",
+  "description": "A Vite plugin to inject environment variables into the browser runtime",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md",
+    "README.zh_CN.md"
+  ],
+  "scripts": {
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "vite build",
+    "build-tsup": "tsup src/index.ts --format esm,cjs --dts",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "vite-plugin",
+    "vite",
+    "environment",
+    "env",
+    "browser"
+  ],
+  "author": "Charles Lo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/charleslo1/vite-plugin-browser-env.git"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.37.0",
+    "tsup": "^6.7.0",
+    "typescript": "^5.1.6",
+    "vite": "4.4.9",
+    "vite-plugin-dts": "^4.2.3",
+    "vitest": "^0.29.8"
+  }
+}
