@@ -1,6 +1,7 @@
-import { Plugin, ResolvedConfig } from 'vite';
+import { Plugin, ResolvedConfig, loadEnv } from 'vite';
 import fs from 'fs';
 import path from 'path';
+import chalk from 'chalk';
 
 // 定义插件选项接口
 export interface BrowserEnvOptions {
@@ -25,15 +26,18 @@ export default function browserEnvPlugin(options: BrowserEnvOptions = {}): Plugi
     excludes = []
   } = options;
 
+  // 收集到的环境变量
   let env: Record<string, string> = {};
+  // 环境配置
   let config: ResolvedConfig;
 
   // 收集环境变量
-  function collectEnvVariables(): void {
-    env = Object.entries(process.env)
+  function collectEnvVariables(mode: string): void {
+    const envs = loadEnv(mode, process.cwd(), prefix || '');
+    env = Object.entries(envs)
       .filter(([key]) =>
         includes.includes(key) ||
-        (prefix !== false && !excludes.includes(key) && key.startsWith(prefix as string))
+        (prefix !== false && !excludes.includes(key) && (prefix === '' || key.startsWith(prefix as string)))
       )
       .reduce((acc, [key, value]) => {
         acc[key] = value || '';
@@ -52,13 +56,23 @@ export default function browserEnvPlugin(options: BrowserEnvOptions = {}): Plugi
     return html.includes(fileName) ? html : html.replace('</head>', `${scriptTag}\n</head>`);
   }
 
+  // 输出环境变量信息到控制台
+  function logEnvInfo(): void {
+    console.log(chalk.cyan('\n✨ [vite-plugin-browser-env] - Collected environment variables:'));
+    Object.entries(env).forEach(([key, value]) => {
+      console.log(chalk.green(`  ${key}: ${value}`));
+    });
+    console.log(chalk.cyan(`Total variables: ${Object.keys(env).length}\n`));
+  }
+
   return {
-    name: 'generate-env',
+    name: 'vite-plugin-browser-env',
 
     // 配置解析完成后的钩子
     configResolved(resolvedConfig: ResolvedConfig) {
       config = resolvedConfig;
-      collectEnvVariables();
+      collectEnvVariables(config.mode);
+      logEnvInfo();
     },
 
     // 配置开发服务器

@@ -1,10 +1,18 @@
 {
   "name": "vite-plugin-browser-env",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "A Vite plugin to inject environment variables into the browser runtime",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist",
     "CHANGELOG.md",
@@ -13,10 +21,11 @@
   ],
   "scripts": {
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
-    "build": "vite build",
-    "build-tsup": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build-vite": "vite build",
     "lint": "eslint src --ext .ts",
     "test": "vitest run",
+    "clear": "rm -rf ./dist",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -32,6 +41,9 @@
     "type": "git",
     "url": "https://github.com/charleslo1/vite-plugin-browser-env.git"
   },
+  "peerDependencies": {
+    "vite": "^2.0.0 || ^3.0.0 || ^4.0.0"
+  },
   "devDependencies": {
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
@@ -39,8 +51,10 @@
     "eslint": "^8.37.0",
     "tsup": "^6.7.0",
     "typescript": "^5.1.6",
-    "vite": "4.4.9",
-    "vite-plugin-dts": "^4.2.3",
     "vitest": "^0.29.8"
+  },
+  "dependencies": {
+    "chalk": "4.1.2",
+    "vite": "^4.4.9"
   }
 }
